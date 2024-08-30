@@ -1,0 +1,28 @@
+pkgname="museeks-bin"
+_pkgname="museeks"
+pkgver="0.13.1"
+pkgrel="1"
+pkgdesc="A lightweight and cross-platform music player."
+arch=("x86_64")
+url="http://museeks.io"
+license=("MIT")
+depends=("gtk2" "cairo" "freetype2" "fontconfig" "nss" "alsa-lib" "ttf-font")
+provides=("museeks")
+conflicts=("museeks" "museeks-git")
+
+sha256sums=('ae07e2442507e04469f577e1aa221e2cadf2dab81df24ba7665a107842b6b5f3')
+
+source=("https://github.com/martpie/${_pkgname}/releases/download/${pkgver}/museeks-amd64.deb")
+
+prepare() {
+	cd "${srcdir}"
+	tar xvf control.tar.gz
+	tar xvf data.tar.xz
+}
+
+package() {
+	mkdir -p "${pkgdir}/usr/bin/"
+	cp -r "${srcdir}/usr" "${pkgdir}/"
+	cp -r "${srcdir}/opt" "${pkgdir}/"
+	ln -s "/opt/Museeks/${_pkgname}" "${pkgdir}/usr/bin/${_pkgname}"
+}

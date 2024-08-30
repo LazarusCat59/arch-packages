@@ -1,0 +1,150 @@
+# Maintainer: LazarusCat59 <misturket@tutanota.com>
+
+pkgname="skyweaver-bin"
+_pkgname="Skyweaver"
+pkgver=0.9.0
+pkgrel=1
+
+pkgdesc="Skyweaver: the browser-based cross platform card game where you can own, trade and gift your cards. Deeply strategic gameplay combined with a player-owned marketplace lets you win tradable NFT cards on your journey to becoming a legendary Skyweaver!"
+arch=('x86_64')
+url="https://www.skyweaver.net/"
+license=('custom')
+
+depends=(
+    'glibc' 
+    'glib2'
+    'gtk3'
+    'nss'
+    'nspr'
+    'dbus'
+    'pango'
+    'cairo'
+    'expat'
+    'pcre2'
+    'zlib'
+    'avahi'
+    'gnutls'
+    'harfbuzz'
+    'tracker3'
+    'fontconfig'
+    'fribidi'
+    'brotli'
+    'zstd'
+    'gdk-pixbuf2'
+    'systemd-libs'
+    'at-spi2-core'
+    'alsa-lib'
+    'gcc-libs'
+    'util-linux-libs'
+    'freetype2'
+    'pixman'
+    'nettle'
+    'gmp'
+    'libcap'
+    'lz4'
+    'xz'
+    'libxcursor'
+    'libxinerama'
+    'graphite'
+    'libjpeg-turbo'
+    'libtiff'
+    'json-glib'
+    'libxml2'
+    'sqlite'
+    'libdatrie'
+    'bzip2'
+    'libgpg-error'
+    'jbigkit'
+    'icu'
+    'libgcrypt'
+    'util-linux-libs'
+    'wayland'
+    'libidn2'
+    'libunistring'
+    'libtasn1'
+    'libxau'
+    'libxdmcp'
+    'libp11-kit'
+    'libxrender'
+    'libpng'
+    'libthai'
+    'libepoxy'
+    'libcloudproviders'
+    'libxi'
+    'libffi'
+    'libx11'
+    'libdrm'
+    'libcups'
+    'libxext'
+    'libxcb'
+    'libxfixes'
+    'libxrandr'
+    'libxkbcommon'
+    'libxcomposite'
+    'libxdamage'
+    'libappindicator-gtk2'
+    'libindicator-gtk2'
+    'libnotify'
+    'libxss'
+    'libxtst'
+)
+
+conflicts=("skyweaver")
+replaces=("skyweaver")
+
+source=(
+    "${_pkgname}-${pkgver}.AppImage::https://github.com/horizon-games/Skyweaver-downloads/releases/download/v0.9.0/Skyweaver-0.9.0.AppImage"
+    "LICENSE.html::https://www.skyweaver.net/terms-of-service/"
+)
+noextract=("${pkgname}-${pkgver}.AppImage")
+sha512sums=(
+    '6c7d7da44e35e2dd828d67fc77ed54f914f70ddd91b6b71d5727fd9afcc26cbc398e9c9d3b042f2a33aa7e396ff22c2d6217c4f84ebbbe878f7ac335e6cf5441'
+    'SKIP'
+)
+
+prepare() {
+	# making .AppImage file executable
+	chmod +x "${_pkgname}-${pkgver}.AppImage"
+
+	# extract .AppImage file
+	"./${_pkgname}-${pkgver}.AppImage" --appimage-extract >/dev/null
+}
+
+build() {
+	# modifying .desktop file
+	sed -i -E "s|Exec=AppRun|Exec=/usr/bin/skyweaver|" "squashfs-root/skyweaver.desktop"
+}
+
+package() {
+	# Copy app files
+	install -dm 755 "${pkgdir}/opt/${_pkgname}"
+	cp -a squashfs-root/* "${pkgdir}/opt/${_pkgname}"
+
+	# Fix permissions
+	for d in locales resources; do
+        chmod 755 "${pkgdir}/opt/${_pkgname}/$d"
+		find "${pkgdir}/opt/${_pkgname}/$d" -type d -execdir chmod 755 {} +
+	done
+
+	# Link entry point
+	install -dm 755 "${pkgdir}/usr/bin"
+    ln -s "/opt/${_pkgname}/${pkgname}" "${pkgdir}/usr/bin/${pkgname}"
+
+	# Copy icons files
+	install -dm 755 "${pkgdir}/usr/share/icons/hicolor/512x512/apps"
+	find squashfs-root/usr/share/icons -type d -execdir chmod 755 {} +
+	cp -a squashfs-root/usr/share/icons/hicolor/0x0/apps/* "${pkgdir}/usr/share/icons/hicolor/512x512/apps/"
+
+	# Copy desktop file
+	install -Dm 644 "squashfs-root/${pkgname}.desktop" "${pkgdir}/usr/share/applications/${pkgname}.desktop"
+
+	# Install LICENSE file
+    install -Dm 644 LICENSE.html "${pkgdir}/usr/share/licenses/${_pkgname}/LICENSE.html"
+    install -Dm 644 LICENSE.html "${pkgdir}/usr/share/licenses/${_pkgname}/LICENSE.electron.txt"
+    install -Dm 644 LICENSE.html "${pkgdir}/usr/share/licenses/${_pkgname}/LICENSES.chromium.html"
+
+	# Remove unused files
+	rm -rf "${pkgdir}/opt/${_pkgname}"/{usr,AppRun,${pkgname}.{desktop,png}}
+	# rm -rf "${pkgdir}/opt/${pkgname}"/{libGLESv2.so,libEGL.so,libvk_swiftshader.so,libvulkan.so}
+	rm -rf "${pkgdir}/opt/${_pkgname}"/LICENSE*
+}
