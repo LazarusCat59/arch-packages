@@ -16,8 +16,8 @@ pkgver() {
 }
 
 package() {
-    mkdir -p "${pkgdir}/boot/EFI/refind/themes/deer-and-fireflies"
-    cp -r "${srcdir}/${pkgname}"/* "${pkgdir}/boot/EFI/refind/themes/deer-and-fireflies/"
+    mkdir -p "${pkgdir}/boot/EFI/refind/themes/refind-ambience-deer-and-fireflies"
+    cp -r "${srcdir}/${pkgname}"/* "${pkgdir}/boot/EFI/refind/themes/refind-ambience-deer-and-fireflies/"
 
-    echo 'Remember to add "include themes/deer-and-fireflies/theme.conf" to your refind.conf file'
+    echo 'Remember to add "include themes/refind-ambience-deer-and-fireflies/theme.conf" to your refind.conf file'
 }
