@@ -1,0 +1,23 @@
+pkgname=babylonia-cli-bin
+pkgver=0.1.2
+pkgrel=1
+pkgdesc="A launcher to play a certain anime game on linux"
+url="https://github.com/ALEZ-DEV/Babylonia-terminal"
+provides=("babylonia-cli")
+arch=("x86_64")
+license=("GPL3")
+
+depends=(
+)
+
+source=(
+    "babylonia-cli::https://github.com/ALEZ-DEV/Babylonia-terminal/releases/download/cli-${pkgver}/babylonia-terminal-cli"
+)
+
+sha256sums=(
+	'a24ca485e18bb58e6a9daa664e9e0a3443ef489246cdef2d5a25a040f91b2795'
+)
+
+package() {
+    install -Dm755 babylonia-cli "${pkgdir}/usr/bin/babylonia-cli"
+}
