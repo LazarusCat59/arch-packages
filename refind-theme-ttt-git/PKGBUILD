@@ -1,0 +1,23 @@
+pkgname=refind-theme-ttt-git
+pkgver=r198.3fff11a
+pkgrel=1
+pkgdesc="rEFInd Tricky Transparencies Theme"
+arch=('any')
+url="https://github.com/gutlessCGH/refindTTT"
+license=('none')
+depends=('refind')
+makedepends=('git')
+source=("${pkgname}::git+https://github.com/gutlessCGH/refindTTT.git")
+sha256sums=('SKIP')
+
+pkgver() {
+    cd "$pkgname"
+    printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
+}
+
+package() {
+    mkdir -p "${pkgdir}/boot/EFI/refind/themes/refindTTT"
+    cp -r "${srcdir}/${pkgname}"/* "${pkgdir}/boot/EFI/refind/themes/refindTTT/"
+
+    echo 'Remember to add "include themes/refindTTT/theme.conf" to your refind.conf file'
+}

@@ -1,0 +1,23 @@
+pkgname=refind-theme-glassy-git
+pkgver=r18.dcf38cc
+pkgrel=1
+pkgdesc="A minimalistic rEFInd theme"
+arch=('any')
+url="https://github.com/Pr0cella/rEFInd-glassy"
+license=('none')
+depends=('refind')
+makedepends=('git')
+source=("${pkgname}::git+https://github.com/Pr0cella/rEFInd-glassy.git")
+sha256sums=('SKIP')
+
+pkgver() {
+    cd "$pkgname"
+    printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
+}
+
+package() {
+    mkdir -p "${pkgdir}/boot/EFI/refind/themes/rEFInd-glassy"
+    cp -r "${srcdir}/${pkgname}"/* "${pkgdir}/boot/EFI/refind/themes/rEFInd-glassy/"
+
+    echo 'Remember to add "include themes/rEFInd-glassy/theme.conf" to your refind.conf file'
+}

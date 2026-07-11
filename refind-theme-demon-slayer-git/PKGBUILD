@@ -1,0 +1,24 @@
+pkgname=refind-theme-demon-slayer-git
+pkgver=r5.8830f42
+pkgrel=1
+pkgdesc="Demon Slayer inspired rEFInd boot manager theme. Includes high resolution character backgrounds for Tanjiro and Zenitsu with clean UI icons."
+arch=('any')
+url="https://github.com/Wi-Fight-IT/rEFInd-demon-slayer"
+license=('none')
+depends=('refind')
+makedepends=('git')
+source=("${pkgname}::git+https://github.com/Wi-Fight-IT/rEFInd-demon-slayer.git")
+sha256sums=('SKIP')
+
+pkgver() {
+    cd "$pkgname"
+    printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
+}
+
+package() {
+    mkdir -p "${pkgdir}/boot/EFI/refind/themes"
+    cp -r "${srcdir}/${pkgname}/rEFInd-tanjiro" "${pkgdir}/boot/EFI/refind/themes/"
+    cp -r "${srcdir}/${pkgname}/rEFInd-zenitsu" "${pkgdir}/boot/EFI/refind/themes/"
+
+    echo 'Remember to add "include themes/rEFInd-tanjiro/theme.conf" or "include themes/rEFInd-zenitsu/theme.conf" to your refind.conf file'
+}

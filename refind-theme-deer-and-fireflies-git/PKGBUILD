@@ -1,0 +1,23 @@
+pkgname=refind-theme-deer-and-fireflies-git
+pkgver=r3.205315f
+pkgrel=1
+pkgdesc="A simple and minimalist theme for the rEFInd boot loader"
+arch=('any')
+url="https://github.com/jpmvferreira/refind-ambience-deer-and-fireflies"
+license=('none')
+depends=('refind')
+makedepends=('git')
+source=("${pkgname}::git+https://github.com/jpmvferreira/refind-ambience-deer-and-fireflies.git")
+sha256sums=('SKIP')
+
+pkgver() {
+    cd "$pkgname"
+    printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
+}
+
+package() {
+    mkdir -p "${pkgdir}/boot/EFI/refind/themes/deer-and-fireflies"
+    cp -r "${srcdir}/${pkgname}"/* "${pkgdir}/boot/EFI/refind/themes/deer-and-fireflies/"
+
+    echo 'Remember to add "include themes/deer-and-fireflies/theme.conf" to your refind.conf file'
+}

@@ -1,13 +1,13 @@
-pkgname=refind-theme-dreary-git
-pkgver=r16.b745a78
-pkgrel=2
-pkgdesc="A gloomy rEFInd theme based on evanpurkhiser/rEFInd-minimal and lukechilds/refind-ambience"
+pkgname=refind-theme-dm-git
+pkgver=r14.41bcf08
+pkgrel=1
+pkgdesc="dm. A theme for rEFInd."
 arch=('any')
-url="https://github.com/dheishman/refind-dreary"
+url="https://github.com/mustaqimM/dm"
 license=('none')
 depends=('refind')
 makedepends=('git')
-source=("${pkgname}::git+https://github.com/dheishman/refind-dreary.git")
+source=("${pkgname}::git+https://github.com/mustaqimM/dm.git")
 sha256sums=('SKIP')
 
 pkgver() {
@@ -16,8 +16,8 @@ pkgver() {
 }
 
 package() {
-    mkdir -p "${pkgdir}/boot/EFI/refind/themes"
-    cp -r "${srcdir}/${pkgname}/highres" "${pkgdir}/boot/EFI/refind/themes/refind-dreary"
+    mkdir -p "${pkgdir}/boot/EFI/refind/themes/dm"
+    cp -r "${srcdir}/${pkgname}"/* "${pkgdir}/boot/EFI/refind/themes/dm/"
 
-    echo 'Remember to add "include themes/refind-dreary/theme.conf" to your refind.conf file'
+    echo 'Remember to add "include themes/dm/theme.conf" to your refind.conf file'
 }
